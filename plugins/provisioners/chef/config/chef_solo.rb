@@ -11,8 +11,7 @@ module VagrantPlugins
         attr_accessor :nfs
         attr_accessor :encrypted_data_bag_secret_key_path
         attr_accessor :encrypted_data_bag_secret
-        attr_accessor :environments_path
-        attr_accessor :environment
+        attr_accessor :file_cache_path
 
         def initialize
           super
