@@ -1,5 +1,9 @@
 module VagrantPlugins
+<<<<<<< HEAD
   module GuestDarwin
+=======
+  module GuestFreeDarwin
+>>>>>>> Highly limited osx (darwin) guest plugin.
     module Cap
       class ChangeHostName
         def self.change_host_name(machine, name)
