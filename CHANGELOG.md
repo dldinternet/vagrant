@@ -191,6 +191,12 @@ IMPROVEMENTS:
     change the subnet and such that the DHCP server uses.
   - Add `file_cache_path` support for chef_solo. [GH-1897]
 
+FEATURES:
+
+  - Chef solo and client provisioning now support a `custom_config_path`
+    setting that accepts a path to a Ruby file to load as part of Chef
+    configuration, allowing you to override any setting available. [GH-876]
+
 BUG FIXES:
 
   - VBoxManage or any other executable missing from PATH properly
