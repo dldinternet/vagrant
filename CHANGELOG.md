@@ -9,6 +9,7 @@ BACKWARDS INCOMPATIBILITY:
     timeout is now used to wait for a graceful halt to work, specified
     by `config.vm.graceful_halt_timeout`.
 
+<<<<<<< HEAD
 FEATURES:
 
   - Salt provisioner. [GH-1626]
@@ -169,6 +170,11 @@ BUG FIXES:
   - Private networks work with Fedora guests once again. [GH-1738]
   - Default internal encoding of strings in Vagrant is now UTF-8, allowing
     detection of Fedora to work again (which contained a UTF-8 string). [GH-1977]
+=======
+BUG FIXES:
+
+  - Fix uninitialized constant error when configuring Arch Linux network. [GH-1734]
+>>>>>>> Update CHANGELOG
 
 ## 1.2.4 (July 16, 2013)
 
