@@ -93,6 +93,11 @@ BUG FIXES:
 
 ## 1.2.6 (July 26, 2013)
 
+IMPROVEMENTS:
+
+  - Remote commands that fail will now show the stdout/stderr of the
+    command that failed. [GH-1203]
+
 BUG FIXES:
 
   - Box collections with multiple formats work properly by converting
