@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 require "vagrant/util/retryable"
 
 module VagrantPlugins
@@ -18,19 +17,7 @@ module VagrantPlugins
               retryable(:on => Vagrant::Errors::DarwinNFSMountFailed, :tries => 10, :sleep => 5) do
                 machine.communicate.sudo(mount_command, :error_class => Vagrant::Errors::DarwinNFSMountFailed)
               end
-=======
-module VagrantPlugins
-  module GuestFreeDarwin
-    module Cap
-      class MountNFSFolder
-        def self.mount_nfs_folder(machine, ip, folders)
-          folders.each do |name, opts|
-            machine.communicate.sudo("mkdir -p #{opts[:guestpath]}")
-            machine.communicate.sudo("mount '#{ip}:#{opts[:hostpath]}' '#{opts[:guestpath]}'")
->>>>>>> Highly limited osx (darwin) guest plugin.
           end
         end
-      end
     end
-  end
 end

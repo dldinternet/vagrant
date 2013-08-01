@@ -1,14 +1,11 @@
 require 'vagrant/util/template_renderer'
 
 module VagrantPlugins
-<<<<<<< HEAD
   module GuestDarwin
     # A general Vagrant system implementation for OS X (ie. "Darwin").
     #
     # Contributed by: - Brian Johnson <b2jrock@gmail.com>
     #                 - Tim Sutton <tim@synthist.net>
-=======
-  module GuestFreeDarwin
     # A general Vagrant system implementation for "freebsd".
     #
     # Contributed by Kenneth Vestergaard <kvs@binarysolutions.dk>

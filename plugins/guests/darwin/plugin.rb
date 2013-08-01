@@ -1,11 +1,7 @@
 require "vagrant"
 
 module VagrantPlugins
-<<<<<<< HEAD
   module GuestDarwin
-=======
-  module GuestFreeDarwin
->>>>>>> Highly limited osx (darwin) guest plugin.
     class Plugin < Vagrant.plugin("2")
       name "Darwin guest"
       description "Darwin guest support."
@@ -34,7 +30,6 @@ module VagrantPlugins
         require_relative "cap/mount_nfs_folder"
         Cap::MountNFSFolder
       end
-<<<<<<< HEAD
 
       guest_capability("darwin", "mount_vmware_shared_folder") do
         require_relative "cap/mount_vmware_shared_folder"
@@ -50,8 +45,6 @@ module VagrantPlugins
         require_relative "cap/verify_vmware_hgfs"
         Cap::VerifyVmwareHgfs
       end
-=======
->>>>>>> Highly limited osx (darwin) guest plugin.
     end
   end
 end

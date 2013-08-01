@@ -1,9 +1,5 @@
 module VagrantPlugins
-<<<<<<< HEAD
   module GuestDarwin
-=======
-  module GuestFreeDarwin
->>>>>>> Highly limited osx (darwin) guest plugin.
     module Cap
       class Halt
         def self.halt(machine)
