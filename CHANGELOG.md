@@ -79,6 +79,7 @@ BUG FIXES:
 
 BUG FIXES:
 
+  - core: strip newlines off of ID file values [GH-2024]
   - guests/debian: Force bring up eth0. Fixes hangs on setting hostname.
    [GH-2026]
   - hosts/fedora: properly detect later CentOS versions. [GH-2008]
