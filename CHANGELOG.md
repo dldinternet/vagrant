@@ -77,6 +77,11 @@ BUG FIXES:
   - providers/virtualbox: Will only set the default name of the VM on
     initial `up`. [GH-1817]
 
+BUG FIXES:
+
+  - guests/debian: Force bring up eth0. Fixes hangs on setting hostname.
+   [GH-2026]
+
 ## 1.2.7 (July 28, 2013)
 
 BUG FIXES:
