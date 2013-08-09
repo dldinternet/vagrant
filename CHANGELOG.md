@@ -84,6 +84,7 @@ BUG FIXES:
    [GH-2026]
   - hosts/fedora: properly detect later CentOS versions. [GH-2008]
   - provisioners/ansible: No longer report failure on every run. [GH-2007]
+  - provisioners/ansible: Properly handle extra vars with spaces. [GH-1984]
 
 ## 1.2.7 (July 28, 2013)
 
