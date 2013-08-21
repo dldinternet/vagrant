@@ -1,0 +1,30 @@
+{
+  "sources": {
+    "linux": {
+      "path": "./cookbooks/linux"
+    },
+    "role": {
+      "path": "./cookbooks/role"
+    },
+    "apache2": {
+      "locked_version": "1.6.8",
+      "git": "https://github.com/dldinternet/apache2.git",
+      "ref": "eb2378b60ca8699ae44fc040575fb256edc804ef"
+    },
+    "build-essential": {
+      "locked_version": "1.4.0"
+    },
+    "chef_handler": {
+      "locked_version": "1.1.4"
+    },
+    "selinux": {
+      "locked_version": "0.5.6"
+    },
+    "vim": {
+      "locked_version": "1.0.2"
+    },
+    "cron": {
+      "locked_version": "1.2.4"
+    }
+  }
+}
