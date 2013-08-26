@@ -1,0 +1,210 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+require 'vagrant-plugin-bundler'
+require 'vagrant-aws'
+require 'vagrant-berkshelf'
+require 'vagrant-omnibus'
+
+Vagrant.configure("2") do |config|
+  # All Vagrant configuration is done here. The most common configuration
+  # options are documented and commented below. For a complete reference,
+  # please see the online documentation at vagrantup.com.
+
+  default_admin_email = 'christo@dldinternet.com'
+  vpbv = '0.2.0.dldi'
+  vpb = "vagrant-plugin-bundler-#{vpbv}.gem"
+  vpbi = "Download 'https://github.com/dldinternet/vagrant-plugins/master/gems/#{vpb}'; vagrant plugin install #{vpb}"
+  vbv = '1.3.3.dldi'
+  vb = "vagrant-berkshelf-#{vbv}.gem"
+  vbi = "Download 'https://github.com/dldinternet/vagrant-plugins/master/gems/#{vb}'; vagrant plugin install #{vb}"
+
+  if not ENV["VAGRANT_NO_PLUGINS"]
+    begin
+      if ::VagrantPlugins::PluginBundler::Plugin.name == "PluginBundler"
+      end
+    rescue NameError
+      #Doesn't exist
+      raise "ERROR: vagrant-plugin-bundler plugin not found! \nPlease run '#{vpbi}'\n"
+    end
+  end
+
+  config.plugin.depend 'vagrant-plugin-bundler', vpbv, :message => "UPDATE: Use this command instead '#{vpbi}'"
+  config.plugin.depend 'vagrant-aws', '0.2.2'
+  config.plugin.depend 'vagrant-omnibus', '1.1.0'
+  config.plugin.depend 'vagrant-vbguest', '0.8.0'
+
+  config.plugin.depend 'vagrant-berkshelf', vbv, :message => "UPDATE: Use this command instead '#{vbi}'"
+  #It exists
+  begin
+    if ::Berkshelf::Vagrant::Plugin::name == "berkshelf"
+      # Enable Berkshelf
+      config.berkshelf.enabled = true
+    end
+  rescue NameError
+    #Doesn't exist
+  end
+
+  #config.omnibus.chef_version = :latest
+
+  if Object.const_defined? 'VagrantVbguest'
+    config.vbguest.no_install  = false
+    config.vbguest.auto_update = false
+    config.vbguest.no_remote   = true
+    config.vbguest.auto_reboot = false
+  end
+
+  #begin
+  #  require 'vagrant-vbguest/config' unless defined? VagrantVbguest::Config
+  #  VagrantVbguest::Config.no_install = false
+  #  VagrantVbguest::Config.auto_update = false
+  #  VagrantVbguest::Config.auto_reboot = false
+  #rescue LoadError
+  #  # vagrant-vbguest not installed
+  #  puts "ERROR: vagrant-vbguest not installed"
+  #end
+
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "" # This will basically prevent VirtualBox provisioning :O
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  # config.vm.box_url = "http://domain.com/path/to/above.box"
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # config.vm.network :forwarded_port, guest: 80, host: 8080
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network :private_network, ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network :public_network
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider :virtualbox do |vb|
+  #   # Don't boot with headless mode
+  #   vb.gui = true
+  #
+  #   # Use VBoxManage to customize the VM. For example to change memory:
+  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
+  # end
+  #
+  # View the documentation for the provider you're using for more
+  # information on available options.
+
+  #aws_h = nil
+  config.vm.provider :aws do |aws, override|
+
+    override.vm.box = "twc-base-centos-volatile-6.4-x86_64-v6"
+
+    #aws.printed                           = true
+    aws.region                            = ENV['AWS_REGION']
+    aws.ami                               = "ami-30537a75"
+    aws.security_groups                   = [ "default" ]
+    aws.instance_type                     = "m1.small"
+    aws.access_key_id                     = ENV['AWS_ACCESS_KEY']
+    aws.secret_access_key                 = ENV['AWS_SECRET_KEY']
+    aws.keypair_name                      = ENV['AWS_KEYPAIR_NAME']
+    aws.ssh_private_key_path              = ENV['AWS_KEY_PATH']
+    aws.ssh_username                      = ENV['AWS_SSH_USERNAME']
+    override.ssh.username                 = ENV['AWS_SSH_USERNAME']
+    override.ssh.default.private_key_path = ENV['AWS_KEY_PATH']
+
+    #if aws_h.nil? then
+    #  aws_h = aws.instance_variables_hash
+    #  #require 'PP'
+    #  #pp aws_h
+    #  aws.tap { |a|
+    #    require 'PP'
+    #    if not ::Vagrant::Plugin::V2::Config::UNSET_VALUE == a then
+    #      h = a.instance_variables_hash
+    #      #pp h
+    #      h.each { |k,v|
+    #        if not ::Vagrant::Plugin::V2::Config::UNSET_VALUE == v then
+    #          printf "%s = %s\n", k, v
+    #        end
+    #      }
+    #    end
+    #  }
+    #  puts '--------------------------'
+    #end
+  end
+
+  # -------------------------------------------------------------------------------------------------------------------
+  # Configuration for the AWS zimbra instance
+  config.vm.define :zimbra do |zimbra|
+
+    # Virtual host name
+    hostname = 'zimbra.dldinternet.com'
+
+    ## Set the hostname for the box.
+    zimbra.vm.hostname = hostname
+
+    #
+    # Chef settings
+    zimbra.vm.provision :chef_solo do |chef|
+      # These paths will be expanded relative to the project directory
+      chef.cookbooks_path = ["/Users/christo/Dropbox/DLDInternet/ws/zmbackup/cookbooks"]
+      chef.roles_path = "/Users/christo/Dropbox/DLDInternet/ws/zmbackup/roles"
+      #chef.log_level = "debug"
+      # Not supported in 1.2.2 -- chef.verbose_logging = "true"
+      chef.node_name = hostname
+
+      # This role represents our default Drupal development stack.
+      chef.add_role("zimbra")
+
+      # [2013-06-17 Christo] For debugging purposes we target roles more granularly.
+      #chef.add_role("apache2_mod_php")
+
+      # Merge in settings
+      chef.json.merge!({
+        :admin_email => ENV['TWC_ADMIN_EMAIL'],
+        :node_hostname    => hostname,
+        :linux => {
+          :timezone => 'US/Pacific',
+        },
+      })
+    end
+
+    zimbra.vm.provision :shell do |s|
+      s.inline = "bash /vagrant/scripts/report-instance-address.sh #{hostname}"
+    end
+
+  end
+
+  # Enable provisioning with chef server, specifying the chef server URL,
+  # and the path to the validation key (relative to this Vagrantfile).
+  #
+  # The Opscode Platform uses HTTPS. Substitute your organization for
+  # ORGNAME in the URL and validation key.
+  #
+  # If you have your own Chef Server, use the appropriate URL, which may be
+  # HTTP instead of HTTPS depending on your configuration. Also change the
+  # validation key to validation.pem.
+  #
+  # config.vm.provision :chef_client do |chef|
+  #   chef.chef_server_url = "https://api.opscode.com/organizations/ORGNAME"
+  #   chef.validation_key_path = "ORGNAME-validator.pem"
+  # end
+  #
+  # If you're using the Opscode platform, your validator client is
+  # ORGNAME-validator, replacing ORGNAME with your organization name.
+  #
+  # If you have your own Chef Server, the default validation client name is
+  # chef-validator, unless you changed the configuration.
+  #
+  #   chef.validation_client_name = "ORGNAME-validator"
+end
